@@ -64,3 +64,14 @@ export type UserTicket = {
   createdAt: Date,
   updatedAt: Date,
 }
+
+export type PaymentReq = {
+	ticketId: number,
+	cardData: {
+		issuer: string,
+    number: number,
+    name: string,
+    expirationDate: Date,
+    cvv: number
+	}
+}
