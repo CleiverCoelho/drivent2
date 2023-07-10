@@ -1,21 +1,16 @@
 import { prisma } from '@/config';
-import { Prisma } from '@prisma/client';
-import { UserTicket } from '@/protocols';
-import dayjs from 'dayjs';
 
 async function getTicketType() {
   return prisma.ticketType.findMany();
 }
 
-async function getUserTicket (userId: number) {
-    const userTicket = await prisma.$queryRaw<UserTicket>(
-        Prisma.sql`	SELECT "Ticket".*, "TicketType".* AS "TicketType" FROM "Ticket"
-        JOIN "TicketType" ON ticket."ticketTypeId"="TicketType".id
-        JOIN "Enrollment" ON ticket."enrollmentId"="Enrollment".id
-        WHERE "Enrollment".userId=${userId}
-        `
-    );
-    return userTicket;
+async function getUserTicket (enrollmentId: number) {
+
+    const ticket = await prisma.ticket.findFirst({
+      where: { enrollmentId },
+      include: {TicketType: true}
+    })
+    return ticket;
 }  
 
 async function getUserEnrollmentInfo (userId : number){
@@ -38,11 +33,17 @@ async function createTicket(enrollmentId: number, ticketTypeId: number) {
 
 }
 
+async function getTicketById(ticketId: number) {
+  const ticket = prisma.ticket.findFirst({ where: { id: ticketId } }); 
+  return ticket;
+}
+
 const ticketRepositorie = {
   getTicketType,
   getUserTicket,
   createTicket,
-  getUserEnrollmentInfo
+  getUserEnrollmentInfo,
+  getTicketById
 };
 
 export default ticketRepositorie;

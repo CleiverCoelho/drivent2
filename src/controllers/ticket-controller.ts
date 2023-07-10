@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import httpStatus, { BAD_REQUEST } from 'http-status';
-import { TicketType } from '@/protocols';
+import httpStatus from 'http-status';
 import ticketService from '@/services/tickets-service';
-import { notFoundError } from '@/errors';
 import { AuthenticatedRequest } from '@/middlewares';
 
 export async function getTicketType(req: AuthenticatedRequest, res: Response) {
@@ -12,7 +10,18 @@ export async function getTicketType(req: AuthenticatedRequest, res: Response) {
 
     return res.status(httpStatus.OK).send(result);
   } catch (error) {
-    return res.status(httpStatus.UNAUTHORIZED).send({});
+    if (error.name === 'UnauthorizedError') {
+      return res.status(httpStatus.UNAUTHORIZED).send({
+        message: error.message,
+      });
+    }
+    if (error.name === 'NotFoundError') {
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
+    }
+    console.log(error)
+    return res.status(httpStatus.BAD_REQUEST).send({});
   }
 }
 
@@ -25,7 +34,19 @@ export async function getUserTicket(req: AuthenticatedRequest, res: Response) {
   
       return res.status(httpStatus.OK).send(result);
     } catch (error) {
-      return res.status(httpStatus.UNAUTHORIZED).send({});
+      if (error.name === 'UnauthorizedError') {
+        return res.status(httpStatus.UNAUTHORIZED).send({
+          message: error.message,
+        });
+      }
+      if (error.name === 'NotFoundError') {
+        return res.status(httpStatus.NOT_FOUND).send({
+          message: error.message,
+        });
+      }
+      console.log(error)
+
+      return res.status(httpStatus.NOT_FOUND).send({});
     }
   }
 
@@ -37,9 +58,20 @@ export async function getUserTicket(req: AuthenticatedRequest, res: Response) {
     try {
 
       const result = await ticketService.createTicket(userId, ticketTypeId);
-      // console.log(result);
       return res.status(httpStatus.CREATED).send(result);
     } catch (error) {
-      return res.status(httpStatus.UNAUTHORIZED).send({});
+      if (error.name === 'UnauthorizedError') {
+        return res.status(httpStatus.UNAUTHORIZED).send({
+          message: error.message,
+        });
+      }
+      if (error.name === 'NotFoundError') {
+        return res.status(httpStatus.NOT_FOUND).send({
+          message: error.message,
+        });
+      }
+      console.log(error)
+
+      return res.status(httpStatus.BAD_REQUEST).send({});
     }
   }

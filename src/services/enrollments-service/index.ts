@@ -72,10 +72,19 @@ export type CreateOrUpdateEnrollmentWithAddress = CreateEnrollmentParams & {
   address: CreateAddressParams;
 };
 
+async function getUserEnrollmentInfo(userId: number) {
+
+  const userEnrollment = await enrollmentRepository.getUserEnrollmentInfo(userId);
+
+  return userEnrollment;
+}
+
+
 const enrollmentsService = {
   getOneWithAddressByUserId,
   createOrUpdateEnrollmentWithAddress,
   getAddressFromCEP,
+  getUserEnrollmentInfo
 };
 
 export default enrollmentsService;
