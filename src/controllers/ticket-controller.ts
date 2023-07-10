@@ -16,7 +16,7 @@ export async function getTicketType(req: Request, res: Response) {
 
 export async function getUserTicket(req: Request, res: Response) {
 
-    const userId : number = res.locals.userId;
+    const userId = res.locals.userId;
 
     try {
       const result = await ticketService.getUserTicket(userId);
