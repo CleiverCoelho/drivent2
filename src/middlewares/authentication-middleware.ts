@@ -22,12 +22,11 @@ export async function authenticateToken(req: AuthenticatedRequest, res: Response
     });
     if (!session) return generateUnauthorizedResponse(res);
 
-    res.locals.userId = userId;
-    // req.body.userId = userId;
-    // req.userId = userId;
+    req.userId = userId;
 
     return next();
   } catch (err) {
+    console.log(err)
     return generateUnauthorizedResponse(res);
   }
 }

@@ -3,8 +3,9 @@ import httpStatus, { BAD_REQUEST } from 'http-status';
 import { TicketType } from '@/protocols';
 import ticketService from '@/services/tickets-service';
 import { notFoundError } from '@/errors';
+import { AuthenticatedRequest } from '@/middlewares';
 
-export async function getTicketType(req: Request, res: Response) {
+export async function getTicketType(req: AuthenticatedRequest, res: Response) {
 
   try {
     const result = await ticketService.getTicketType();
@@ -15,9 +16,9 @@ export async function getTicketType(req: Request, res: Response) {
   }
 }
 
-export async function getUserTicket(req: Request, res: Response) {
+export async function getUserTicket(req: AuthenticatedRequest, res: Response) {
 
-    const userId = res.locals.userId;
+    const userId = req.userId;
 
     try {
       const result = await ticketService.getUserTicket(userId);
@@ -28,11 +29,10 @@ export async function getUserTicket(req: Request, res: Response) {
     }
   }
 
-  export async function createTicket(req: Request, res: Response) {
+  export async function createTicket(req: AuthenticatedRequest, res: Response) {
 
-    const userId = res.locals.userId;
     const ticketTypeId = req.body.ticketTypeId;
-    // const ticketTypeId = req.body.userId;
+    const userId = req.userId;
 
     try {
 

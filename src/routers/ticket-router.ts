@@ -6,10 +6,10 @@ import { ticketSchema } from '@/schemas';
 
 const ticketRouter = Router();
 
-// ticketRouter.all('/*', authenticateToken);
-ticketRouter.get('/types', authenticateToken, getTicketType);
-ticketRouter.get('/', authenticateToken, getUserTicket);
-ticketRouter.post('/', authenticateToken, validateBody(ticketSchema), createTicket);
+ticketRouter.all('/*', authenticateToken);
+ticketRouter.get('/types', getTicketType);
+ticketRouter.get('/', getUserTicket);
+ticketRouter.post('/', validateBody(ticketSchema), createTicket);
 
 
 export { ticketRouter };
