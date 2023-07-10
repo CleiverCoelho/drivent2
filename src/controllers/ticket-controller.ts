@@ -32,6 +32,7 @@ export async function getUserTicket(req: Request, res: Response) {
 
     const userId = res.locals.userId;
     const ticketTypeId = req.body.ticketTypeId;
+    // const ticketTypeId = req.body.userId;
 
     try {
 
