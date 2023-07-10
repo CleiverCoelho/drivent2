@@ -1,9 +1,12 @@
 import { prisma } from '@/config';
 import { Payment } from '@prisma/client';  
 
-async function getPaymentByTicket(ticketId: number) {
-    const payment = prisma.payment.findFirst({ where: { ticketId } }); 
-    return payment;
+async function getPaymentByTicket(ticketId : number) : Promise<Payment>{
+    return prisma.payment.findFirst({
+        where :{
+            ticketId
+        }
+    }) 
 }
 
 type CreatePayment = Omit<Payment, 'id'>;

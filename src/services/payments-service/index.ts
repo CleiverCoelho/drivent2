@@ -4,17 +4,24 @@ import { Payment } from '@prisma/client';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import paymentsRepositorie from '@/repositories/payments-repositorie';
 import ticketRepositorie from '@/repositories/tickets-repository';
+import { badRequestError } from '@/errors/bad-request-error';
 
-async function getPaymentByTicket(ticketId: number, userId: number) {
+async function getPaymentByTicket(ticketId : number, userId: number) {
+  
+  if(!ticketId) throw badRequestError();
   const ticket = await ticketRepositorie.getTicketById(ticketId);
-  if(!ticket.id) throw notFoundError();
 
   const userEnrollmentInfo = await enrollmentRepository.getUserEnrollmentInfo(userId);
   const isUserTicket = await ticketRepositorie.getUserTicket(userEnrollmentInfo.id);
-  if(!isUserTicket.id) throw unauthorizedError();
 
+  if(!ticket || !isUserTicket){
+    if(!ticket){
+        throw notFoundError();
+    } else {
+        throw unauthorizedError();
+    }
+  }
   const result = await paymentsRepositorie.getPaymentByTicket(ticketId);
-
   return result;
 }
 

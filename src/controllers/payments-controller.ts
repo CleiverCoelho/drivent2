@@ -7,8 +7,8 @@ import { PaymentReq } from '@/protocols';
 export async function getPaymentByTicket(req: AuthenticatedRequest, res: Response) {
 
     const userId = req.userId;
-    const ticketId : number = parseInt(req.params.ticketId);
-    console.log(ticketId)
+    const ticketId = parseInt(req.query.ticketId as string);
+    
     try {
         const result = await paymentService.getPaymentByTicket(ticketId, userId);
         return res.status(httpStatus.OK).send(result);
@@ -20,10 +20,16 @@ export async function getPaymentByTicket(req: AuthenticatedRequest, res: Respons
             });
           }
         if (error.name === 'NotFoundError') {
-        return res.status(httpStatus.NOT_FOUND).send({
-            message: error.message,
-        });
+            return res.status(httpStatus.NOT_FOUND).send({
+                message: error.message,
+            });
         }
+        if (error.name === 'BadRequestError') {
+            return res.status(httpStatus.BAD_REQUEST).send({
+                message: error.message,
+            });
+        }
+
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({});
     }
 }

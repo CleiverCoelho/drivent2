@@ -8,7 +8,7 @@ import { postPaymentTicketSchema } from '@/schemas/postPaymentSchema';
 const paymentsRouter = Router();
 
 paymentsRouter.all('/*', authenticateToken);
-paymentsRouter.get('/', validateParams(getPaymentTicketSchema), getPaymentByTicket);
+paymentsRouter.get('/', getPaymentByTicket);
 paymentsRouter.post('/process', validateBody(postPaymentTicketSchema), postPaymentProcess)
 
 export { paymentsRouter };
